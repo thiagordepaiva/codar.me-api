@@ -7,5 +7,25 @@
     "email": "thiago.rodriguesdepaiva@gmail.com"
   },
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "fix": "echo 123",
+    "prepare": "husky install"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "./src/**.{js,ts,md,json}": [
+      "yarn fix"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.4",
+    "@commitlint/config-conventional": "^17.4.4",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.0"
+  }
 }
