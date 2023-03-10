@@ -2,7 +2,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:json/recommended",
-    "plugin:/prettier/recommended"
+    "plugin:prettier/recommended"
   ],
   "env": {
     "es6": true,
@@ -13,10 +13,10 @@
     "comma-dangle": [
       "error",
       {
-        "arrays": "always-multiine",
-        "objects": "always-multiine",
-        "imports": "always-multiine",
-        "exports": "always-multiine",
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
         "functions": "never"
       }
     ]
