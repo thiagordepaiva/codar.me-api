@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 import { prisma } from "~/data";
 
@@ -10,7 +11,9 @@ export const login = async ctx => {
       where: { email },
     });
 
-    if (!user || password != user.password) {
+    const passwordEqual = await bcrypt.compare(password, user.password);
+
+    if (!user || !passwordEqual) {
       ctx.status = 404;
       return;
     }
