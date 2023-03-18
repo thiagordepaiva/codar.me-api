@@ -6,7 +6,7 @@ import * as auth from "./modules/auth";
 export const router = new Router();
 
 // Auth
-router.post("/login", auth.login);
+router.get("/login", auth.login);
 
 // Users
 router.get("/users", users.list);
