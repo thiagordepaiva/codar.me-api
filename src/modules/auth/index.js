@@ -3,19 +3,20 @@ import bcrypt from "bcrypt";
 
 import { prisma } from "~/data";
 
+import { decodedBasicToken } from "./services";
+
 export const login = async ctx => {
+  let email, password;
+
   try {
-    const [type, credencials] = ctx.request.headers.authorization.split(" ");
+    [email, password] = decodedBasicToken(ctx.request.headers.authorization);
+  } catch (error) {
+    ctx.staus = 400;
+    console.log("Error: " + error);
+    return;
+  }
 
-    if (type !== "Basic") {
-      ctx.staus = 400;
-      return;
-    }
-
-    const [email, password] = Buffer.from(credencials, "base64")
-      .toString()
-      .split(":");
-
+  try {
     const user = await prisma.user.findUnique({
       where: { email },
     });
