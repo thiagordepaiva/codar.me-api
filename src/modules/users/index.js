@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 
 import { prisma } from "~/data";
+import "./model";
 
 export const list = async ctx => {
   try {
@@ -14,11 +15,7 @@ export const list = async ctx => {
 
 export const create = async ctx => {
   try {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(
-      ctx.request.body.password,
-      saltRounds
-    );
+    const hashedPassword = await encryptingPassword(ctx.request.body.password);
 
     ctx.body = await prisma.user.create({
       data: {
@@ -65,4 +62,10 @@ export const remove = async ctx => {
     ctx.body = "Ops! Algo deu errado tente novamente.";
     console.log("Error: " + error);
   }
+};
+
+export const encryptingPassword = async password => {
+  const saltRounds = 10;
+
+  return await bcrypt.hash(password, saltRounds);
 };

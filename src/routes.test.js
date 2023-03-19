@@ -1,21 +1,55 @@
+import jwt from "jsonwebtoken";
 import request from "supertest";
 
+import { prisma } from "~/data";
+
+import { encryptingPassword } from "./modules/users";
 import { app } from "./server-setup";
 
+const name = "Thiago Rodrigues de Paiva";
 const email = "thiagordepaiva@gmail.com";
 const emailErrado = "email_errado@email.com";
 const password = "123456";
 const passwordErrado = "654321";
+var user;
 
 describe("Auth routes", () => {
+  beforeAll(async () => {
+    const hashedPassword = await encryptingPassword(password);
+
+    user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+  });
+
+  afterAll(async () => {
+    await prisma.user.delete({
+      where: { id: user.id },
+    });
+  });
+
   it("deveria realizar o login com sucesso quando passado as credenciais corretas", async () => {
     const result = await request(app.listen())
       .get("/login")
       .auth(email, password);
 
+    const decodedToken = jwt.verify(result.body.token, process.env.JWT_SECRET);
+
     expect(result.status).toBe(200);
-    expect(result.body.user.id).not.toBe(null);
-    expect(result.body.token).not.toBe(null);
+    expect(result.body.user).toBeTruthy();
+    expect(result.body.user.id).toBe(user.id);
+    expect(result.body.user.email).toBe(user.email);
+    expect(result.body.user.name).toBe(user.name);
+    expect(result.body.user.password).toBeFalsy();
+
+    expect(result.body.token).toBeTruthy();
+
+    expect(decodedToken.sub).toBe(user.id);
+    expect(decodedToken.name).toBe(user.name);
   });
 
   it("deveria retornar um 'Status 404 not found' quando logar com email errado nas credenciais", async () => {
