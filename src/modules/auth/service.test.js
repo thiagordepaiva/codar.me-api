@@ -1,4 +1,4 @@
-import { decodedBasicToken, TokenTypeError } from "./services";
+import { decodedBasicToken } from "./services";
 
 const email = "thiagordepaiva@gmail.com";
 const password = "123456";
