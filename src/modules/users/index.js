@@ -1,11 +1,10 @@
 import bcrypt from "bcrypt";
 
-import { prisma } from "~/data";
-import "./model";
+import * as model from "./model";
 
 export const list = async ctx => {
   try {
-    ctx.body = await prisma.user.findMany();
+    ctx.body = await model.findMany();
   } catch (error) {
     ctx.staus = 500;
     ctx.body = "Ops! Algo deu errado tente novamente.";
@@ -17,7 +16,7 @@ export const create = async ctx => {
   try {
     const hashedPassword = await encryptingPassword(ctx.request.body.password);
 
-    ctx.body = await prisma.user.create({
+    ctx.body = await model.create({
       data: {
         name: ctx.request.body.name,
         email: ctx.request.body.email,
@@ -39,7 +38,7 @@ export const update = async ctx => {
       password: ctx.request.body.password,
     };
 
-    ctx.body = await prisma.user.update({
+    ctx.body = await model.update({
       where: { id: ctx.params.id },
       data,
     });
@@ -52,7 +51,7 @@ export const update = async ctx => {
 
 export const remove = async ctx => {
   try {
-    await prisma.user.delete({
+    await model.remove({
       where: { id: ctx.params.id },
     });
 

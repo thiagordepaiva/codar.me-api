@@ -1,10 +1,9 @@
 import jwt from "jsonwebtoken";
 import request from "supertest";
 
-import { prisma } from "~/data";
-
 import { encryptingPassword } from "./modules/users";
 import { app } from "./server-setup";
+import * as model from "./modules/users/model";
 
 const name = "Thiago Rodrigues de Paiva";
 const email = "thiagordepaiva@gmail.com";
@@ -15,11 +14,11 @@ var user;
 
 describe("Auth routes", () => {
   beforeAll(async () => {
-    await prisma.user.deleteMany({});
+    await model.deleteMany({});
 
     const hashedPassword = await encryptingPassword(password);
 
-    user = await prisma.user.create({
+    user = await model.create({
       data: {
         name,
         email,
@@ -29,7 +28,7 @@ describe("Auth routes", () => {
   });
 
   afterAll(async () => {
-    await prisma.user.delete({
+    await model.remove({
       where: { id: user.id },
     });
   });

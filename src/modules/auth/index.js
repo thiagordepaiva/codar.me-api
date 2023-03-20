@@ -1,8 +1,7 @@
 import jwt from "jsonwebtoken";
 
-import { prisma } from "~/data";
-
 import { decodedBasicToken } from "./services";
+import * as model from "../users/model";
 
 export const login = async ctx => {
   let email, password;
@@ -16,7 +15,7 @@ export const login = async ctx => {
   }
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await model.findUnique({
       where: { email, password },
     });
 
