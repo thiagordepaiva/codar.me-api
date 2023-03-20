@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import {omit} from "ramda";
+import { omit } from "ramda";
 
 import { prisma } from "~/data";
 
