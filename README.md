@@ -51,6 +51,7 @@ yarn prisma db seed
 ```
 
 # Rodando Testes
+
 -Para Rodar os testes basta executar no terminal
 
 ```bash
