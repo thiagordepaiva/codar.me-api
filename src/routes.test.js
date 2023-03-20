@@ -15,6 +15,8 @@ var user;
 
 describe("Auth routes", () => {
   beforeAll(async () => {
+    await prisma.user.deleteMany({});
+
     const hashedPassword = await encryptingPassword(password);
 
     user = await prisma.user.create({
