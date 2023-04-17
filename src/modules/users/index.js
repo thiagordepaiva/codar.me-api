@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+import { omit } from "ramda";
 import bcrypt from "bcrypt";
 
 import * as model from "./model";
@@ -16,13 +18,25 @@ export const create = async ctx => {
   try {
     const hashedPassword = await encryptingPassword(ctx.request.body.password);
 
-    ctx.body = await model.create({
+    const user = await model.create({
       data: {
         name: ctx.request.body.name,
         email: ctx.request.body.email,
         password: hashedPassword,
       },
     });
+
+    const token = jwt.sign(
+      {
+        sub: user.id,
+        name: user.name,
+        iat: Math.floor(Date.now() / 1000) - 30,
+        exp: Math.floor(Date.now() / 1000) + 600,
+      },
+      process.env.JWT_SECRET
+    );
+
+    ctx.body = { user: omit(["password"], user), token };
   } catch (error) {
     ctx.staus = 500;
     ctx.body = "Ops! Algo deu errado tente novamente.";
