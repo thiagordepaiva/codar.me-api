@@ -9,6 +9,7 @@ describe("Service Auth Module", () => {
     const token = Buffer.from(`${email}:${password}`, "utf-8").toString(
       "base64"
     );
+
     const basicToken = `Basic ${token}`;
 
     //execution
